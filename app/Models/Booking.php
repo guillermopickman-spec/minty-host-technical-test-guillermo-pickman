@@ -37,8 +37,9 @@ class Booking extends Model
     protected function casts(): array
     {
         return [
-            'checkin_at' => 'immutable_datetime',
-            'checkout_at' => 'immutable_datetime',
+            'checkin_at' => 'datetime',
+            'checkout_at' => 'datetime',
+            'status' => BookingStatus::class,
         ];
     }
 }
