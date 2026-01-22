@@ -2,58 +2,56 @@
 cd /d "%~dp0"
 CHCP 65001 >nul
 
-echo 🚀 Minty Host Guest Manager - Setup Script
+echo 🚀 Minty Host Guest Manager - Ultimate Setup
 echo ===========================================
 echo.
 
-:: --- 1. Verificación de Requisitos ---
-echo 🔍 Checking Environment...
-php --version >nul 2>&1 || (echo ❌ PHP not found. & pause & exit /b 1)
-call composer --version >nul 2>&1 || (echo ❌ Composer not found. & pause & exit /b 1)
-node --version >nul 2>&1 || (echo ❌ Node.js not found. & pause & exit /b 1)
-echo ✅ Environment OK.
-echo.
+:: --- 1. CLEANING PREVIOUS ATTEMPTS ---
+echo 🧹 Cleaning environment...
+if exist database\database.sqlite del /f /q database\database.sqlite
+if not exist database mkdir database
+copy /y nul database\database.sqlite >nul
 
-:: --- 2. Instalación de Dependencias ---
-echo 📦 Installing PHP dependencies...
-call composer install --ignore-platform-reqs
-
-:: --- 3. Configuración del Entorno ---
 if not exist .env (
     echo 📝 Creating .env file...
     copy .env.example .env >nul
-    timeout /t 1 >nul
 )
 
-echo 🔑 Generating application key...
-call php artisan key:generate --force
-
-:: --- 4. Base de Datos (SQLite) ---
-if not exist database ( mkdir database )
-echo 🗄️ Initializing SQLite database...
-:: El comando 'del' asegura que si hay una DB corrupta, la borramos para empezar de cero
-if exist database\database.sqlite del /f /q database\database.sqlite
-copy /y nul database\database.sqlite >nul
-
-:: PAUSA CRÍTICA: Esperar a que Windows libere el archivo .sqlite
+:: --- 2. FIRST PASS: Dependencies ---
+echo 📦 Pass 1/2: Installing dependencies...
+call composer install --ignore-platform-reqs --no-scripts
 timeout /t 2 >nul
 
-echo 🗃️ Running migrations and seeding test data...
+:: --- 3. SECOND PASS: The "Cheat" (Re-running key commands) ---
+echo 🔑 Pass 2/2: Configuring Laravel...
+call php artisan key:generate --force
+call php artisan config:clear
+call php artisan cache:clear
+
+echo 🗃️ Running migrations and seeding...
+:: We run this twice if needed, but 'fresh' usually works if config is clear
 call php artisan migrate:fresh --seed --force
 
-:: --- 5. Frontend (Vite) ---
-echo 📦 Installing JavaScript dependencies...
+:: --- 4. FRONTEND ---
+echo 📦 Finalizing Frontend...
 call npm install
-
-echo 🏗️ Building frontend assets (Vite)...
 call npm run build
+
+:: --- 5. THE ULTIMATE CHECK ---
+echo.
+echo 🔍 Verifying installation...
+if exist public\build\manifest.json (
+    echo ✅ Assets compiled successfully.
+) else (
+    echo ⚠️ Assets missing. Running build again...
+    call npm run build
+)
 
 echo.
 echo ===========================================
 echo ✅ SETUP COMPLETED SUCCESSFULLY!
 echo ===========================================
 echo.
-echo 🌐 URL: http://localhost:8000
 echo 🚀 Next step: Run 'php artisan serve'
 echo.
 pause
