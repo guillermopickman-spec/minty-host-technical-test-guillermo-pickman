@@ -1,68 +1,25 @@
 @echo off
-:: Ensure the script runs from the current folder
 cd /d "%~dp0"
-:: Enable UTF-8 for emojis
 CHCP 65001 >nul
 
 echo 🚀 Minty Host Guest Manager - Setup Script
 echo ===========================================
 echo.
 
-:: --- Prerequisite Checks ---
-
+:: --- Verificación de Requisitos ---
 echo 🔍 Checking Environment...
-echo.
 
-:: Check PHP
-php --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ❌ PHP not found. Install PHP 8.2+ from https://windows.php.net/
-    pause
-    exit /b 1
-) else (
-    echo ✅ PHP is installed
-)
+php --version >nul 2>&1 || (echo ❌ PHP not found. & pause & exit /b 1)
+call composer --version >nul 2>&1 || (echo ❌ Composer not found. & pause & exit /b 1)
+node --version >nul 2>&1 || (echo ❌ Node.js not found. & pause & exit /b 1)
+call npm --version >nul 2>&1 || (echo ❌ npm not found. & pause & exit /b 1)
 
-:: Check Composer
-call composer --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ❌ Composer not found. Install it from https://getcomposer.org/
-    pause
-    exit /b 1
-) else (
-    echo ✅ Composer is installed
-)
+echo ✅ Environment OK.
 
-:: Check Node.js
-node --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ❌ Node.js not found. Install it from https://nodejs.org/
-    pause
-    exit /b 1
-) else (
-    echo ✅ Node.js is installed
-)
-
-:: Check npm
-call npm --version >nul 2>&1
-if %errorlevel% neq 0 (
-    echo ❌ npm not found.
-    pause
-    exit /b 1
-) else (
-    echo ✅ npm is installed
-)
-
-echo.
-echo 🎉 All required tools are installed!
-echo.
-
-:: --- Installation Steps ---
+:: --- Pasos de Instalación ---
 
 echo 📦 Installing PHP dependencies...
-:: Using 'call' ensures the script returns here after finishing
 call composer install --ignore-platform-reqs
-if %errorlevel% neq 0 (echo ❌ Composer failed & pause & exit /b 1)
 
 if not exist .env (
     echo 📝 Creating .env file...
@@ -72,42 +29,27 @@ if not exist .env (
 echo 🔑 Generating application key...
 call php artisan key:generate
 
+:: Asegurar que la carpeta database existe
 if not exist database ( mkdir database )
-if not exist database\database.sqlite (
-    echo 🗄️ Creating SQLite database...
-    type nul > database\database.sqlite
-)
 
-echo 🗃️ Running database migrations...
-call php artisan migrate --force --no-interaction
+:: Resetear base de datos SQLite
+echo 🗄️ Setting up SQLite database...
+copy /y nul database\database.sqlite >nul
 
-echo 🌱 Seeding database with test data...
-call php artisan db:seed --force --no-interaction
+echo 🗃️ Running migrations and seeding...
+:: Usamos migrate:fresh para asegurar que la estructura sea limpia
+call php artisan migrate:fresh --seed --force
 
-echo 📦 Installing JavaScript dependencies...
+echo 📦 Installing JS dependencies...
 call npm install
 
-echo 🏗️ Building frontend assets...
+echo 🏗️ Building frontend assets (Vite)...
+:: ESTO arregla el error 404 que viste antes
 call npm run build
 
 echo.
 echo ✅ Setup completed successfully!
-echo 🚀 Run 'start-dev.bat' to begin.
 echo.
-echo 📋 Installation Summary:
-echo   - PHP: ✅ Installed
-echo   - Composer: ✅ Installed  
-echo   - Node.js: ✅ Installed
-echo   - npm: ✅ Installed
-echo   - Laravel dependencies: ✅ Installed
-echo   - Database: ✅ Created and migrated
-echo   - Test data: ✅ Seeded with sample bookings and guests
-echo   - Frontend assets: ✅ Built
-echo.
-echo 🌐 Application ready at: http://localhost:8000
-echo ⚠️  IMPORTANT: The development server is NOT running yet!
-echo    Run 'start-dev.bat' to start the server and open your browser.
-echo.
-echo 💡 Press any key to close this window and run 'start-dev.bat' to launch the application.
+echo 💡 Now run your start script or 'php artisan serve'
 echo.
 pause
