@@ -141,6 +141,27 @@ php artisan migrate
 php artisan db:seed
 ```
 
+### Quick Setup Script
+For a complete setup including database seeding with test data:
+```bash
+# Windows
+setup.bat
+
+# Or manually:
+composer install
+npm install
+php artisan key:generate
+php artisan migrate
+php artisan db:seed
+npm run build
+php artisan serve
+```
+
+The seeding process will populate your database with:
+- 1 test user
+- 100 sample bookings with various check-in/check-out dates and statuses
+- 10 sample guests with complete contact information
+
 ### Generate Dummy Data
 ```bash
 php artisan initialize-bookings

@@ -81,6 +81,9 @@ if not exist database\database.sqlite (
 echo 🗃️ Running database migrations...
 call php artisan migrate --force --no-interaction
 
+echo 🌱 Seeding database with test data...
+call php artisan db:seed --force --no-interaction
+
 echo 📦 Installing JavaScript dependencies...
 call npm install
 
@@ -98,10 +101,13 @@ echo   - Node.js: ✅ Installed
 echo   - npm: ✅ Installed
 echo   - Laravel dependencies: ✅ Installed
 echo   - Database: ✅ Created and migrated
+echo   - Test data: ✅ Seeded with sample bookings and guests
 echo   - Frontend assets: ✅ Built
 echo.
 echo 🌐 Application ready at: http://localhost:8000
+echo ⚠️  IMPORTANT: The development server is NOT running yet!
+echo    Run 'start-dev.bat' to start the server and open your browser.
 echo.
-echo 💡 Press any key to close this window.
+echo 💡 Press any key to close this window and run 'start-dev.bat' to launch the application.
 echo.
 pause
