@@ -15,9 +15,8 @@
     <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
 
     <!-- Built assets for production -->
-    <link rel="stylesheet" href="/build/assets/app-BaIqwqIy.css">
-    <script type="module" src="/build/assets/app-Cby1b32m.js"></script>
-    <script type="module" src="/build/assets/Welcome-C1Fl5obd.js"></script>
+    <link rel="stylesheet" href="/build/assets/app-C8KxkGLy.css">
+    <script type="module" src="/build/assets/app-Dsb8ZV8m.js"></script>
     @inertiaHead
 </head>
 
