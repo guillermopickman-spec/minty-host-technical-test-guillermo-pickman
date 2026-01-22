@@ -24,3 +24,7 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+
+# Documentation files to ignore
+PROJECT_TECHNICAL_DOCUMENTATION.md
+README copy.md
