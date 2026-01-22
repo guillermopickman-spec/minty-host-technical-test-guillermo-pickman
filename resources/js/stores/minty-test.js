@@ -27,7 +27,6 @@ export const useMintyTestStore = defineStore('minty-test', {
                 this.bookings = data;
                 this.totalItems = data.length;
             } catch (err) {
-                console.error('Error fetching bookings:', err);
                 this.error = err.message;
             } finally {
                 this.loading = false;
@@ -74,7 +73,6 @@ export const useMintyTestStore = defineStore('minty-test', {
 
                 return result;
             } catch (err) {
-                console.error('Error creating guest:', err);
                 this.error = err.message;
                 throw err;
             } finally {
@@ -114,7 +112,6 @@ export const useMintyTestStore = defineStore('minty-test', {
 
                 return result;
             } catch (err) {
-                console.error('Error updating guest:', err);
                 this.error = err.message;
                 throw err;
             } finally {
@@ -148,7 +145,6 @@ export const useMintyTestStore = defineStore('minty-test', {
 
                 return { message: 'Guest deleted successfully' };
             } catch (err) {
-                console.error('Error deleting guest:', err);
                 this.error = err.message;
                 throw err;
             } finally {
