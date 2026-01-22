@@ -11,10 +11,22 @@ echo.
 :: --- Prerequisite Checks ---
 
 echo 🔍 Checking Environment...
-php --version >nul 2>&1 || (echo ❌ PHP not found. Install PHP 8.2+ & pause & exit /b 1)
-composer --version >nul 2>&1 || (echo ❌ Composer not found. & pause & exit /b 1)
-node --version >nul 2>&1 || (echo ❌ Node.js not found. & pause & exit /b 1)
-npm --version >nul 2>&1 || (echo ❌ npm not found. & pause & exit /b 1)
+php --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ❌ PHP not found. Install PHP 8.2+ & pause & exit /b 1
+)
+composer --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ❌ Composer not found. & pause & exit /b 1
+)
+node --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ❌ Node.js not found. & pause & exit /b 1
+)
+npm --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ❌ npm not found. & pause & exit /b 1
+)
 
 echo ✅ All required tools are installed!
 echo.

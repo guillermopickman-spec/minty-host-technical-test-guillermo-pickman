@@ -8,7 +8,10 @@ echo =====================================================
 echo.
 
 :: Quick validation
-php --version >nul 2>&1 || (echo ❌ PHP missing & pause & exit /b 1)
+php --version >nul 2>&1
+if %errorlevel% neq 0 (
+    echo ❌ PHP missing & pause & exit /b 1
+)
 
 echo 🌐 Starting development environment...
 echo ⚠️  Close the new window to stop the servers.
