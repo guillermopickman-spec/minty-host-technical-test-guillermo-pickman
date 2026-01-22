@@ -48,7 +48,7 @@ echo.
 
 :: Install PHP dependencies
 echo 📦 Installing PHP dependencies...
-composer install
+composer install --ignore-platform-reqs
 if %errorlevel% neq 0 (
     echo ❌ Failed to install PHP dependencies
     pause

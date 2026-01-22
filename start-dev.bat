@@ -43,4 +43,4 @@ echo ⚠️  Press Ctrl+C to stop all servers
 echo.
 
 :: Start the development environment using Laravel's built-in script
-composer run dev
+composer run dev --ignore-platform-reqs

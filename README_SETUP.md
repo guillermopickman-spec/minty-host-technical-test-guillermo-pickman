@@ -37,8 +37,8 @@ If you prefer manual setup or are on macOS/Linux:
 git clone <repository-url>
 cd minty-host-guest-manager
 
-# 2. Install PHP dependencies
-composer install
+# 2. Install PHP dependencies (ignore platform requirements)
+composer install --ignore-platform-reqs
 
 # 3. Create environment file
 cp .env.example .env
