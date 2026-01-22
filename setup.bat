@@ -1,8 +1,8 @@
 @echo off
-SETLOCAL EnableExtensions
-CHCP 65001 >nul
-:: Ensure we are in the script's directory
+:: Ensure the script runs from the current folder
 cd /d "%~dp0"
+:: Enable UTF-8 for emojis
+CHCP 65001 >nul
 
 echo 🚀 Minty Host Guest Manager - Setup Script
 echo ===========================================
@@ -16,15 +16,19 @@ echo.
 :: Check PHP
 php --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ PHP not found. Install PHP 8.2+ & pause & exit /b 1
+    echo ❌ PHP not found. Install PHP 8.2+ from https://windows.php.net/
+    pause
+    exit /b 1
 ) else (
     echo ✅ PHP is installed
 )
 
 :: Check Composer
-composer --version >nul 2>&1
+call composer --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ Composer not found. & pause & exit /b 1
+    echo ❌ Composer not found. Install it from https://getcomposer.org/
+    pause
+    exit /b 1
 ) else (
     echo ✅ Composer is installed
 )
@@ -32,15 +36,19 @@ if %errorlevel% neq 0 (
 :: Check Node.js
 node --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ Node.js not found. & pause & exit /b 1
+    echo ❌ Node.js not found. Install it from https://nodejs.org/
+    pause
+    exit /b 1
 ) else (
     echo ✅ Node.js is installed
 )
 
 :: Check npm
-npm --version >nul 2>&1
+call npm --version >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ❌ npm not found. & pause & exit /b 1
+    echo ❌ npm not found.
+    pause
+    exit /b 1
 ) else (
     echo ✅ npm is installed
 )
@@ -52,6 +60,7 @@ echo.
 :: --- Installation Steps ---
 
 echo 📦 Installing PHP dependencies...
+:: Using 'call' ensures the script returns here after finishing
 call composer install --ignore-platform-reqs
 if %errorlevel% neq 0 (echo ❌ Composer failed & pause & exit /b 1)
 
@@ -63,6 +72,7 @@ if not exist .env (
 echo 🔑 Generating application key...
 call php artisan key:generate
 
+if not exist database ( mkdir database )
 if not exist database\database.sqlite (
     echo 🗄️ Creating SQLite database...
     type nul > database\database.sqlite
@@ -81,8 +91,6 @@ echo.
 echo ✅ Setup completed successfully!
 echo 🚀 Run 'start-dev.bat' to begin.
 echo.
-echo 🎯 Testing environment...
-echo.
 echo 📋 Installation Summary:
 echo   - PHP: ✅ Installed
 echo   - Composer: ✅ Installed  
@@ -94,6 +102,6 @@ echo   - Frontend assets: ✅ Built
 echo.
 echo 🌐 Application ready at: http://localhost:8000
 echo.
-echo 💡 Keep this window open for reference
+echo 💡 Press any key to close this window.
 echo.
-cmd /k echo "Setup complete! Type 'exit' to close this window."
+pause
