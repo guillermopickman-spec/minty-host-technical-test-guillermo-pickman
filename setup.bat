@@ -1,46 +1,65 @@
 @echo off
+:: Ensure the script runs from the project root
 cd /d "%~dp0"
+:: Enable UTF-8 for clear logging and emojis
 CHCP 65001 >nul
 
 echo 🚀 Minty Host - Professional Setup
 echo ===========================================
 
-:: 1. CREATE FILES EARLY
-:: Creating them at the very start gives Windows time to "unlock" them
+:: 1. EARLY SYSTEM PREPARATION
+:: Create files immediately to give Windows time to release locks
 if not exist .env copy .env.example .env >nul
+
 if not exist database mkdir database
 if exist database\database.sqlite del /f /q database\database.sqlite
+:: Using 'type nul' ensures a clean SQLite file is ready
 type nul > database\database.sqlite
 
-:: 2. INSTALL DEPENDENCIES (Long process gives OS time to breathe)
-echo 📦 Installing dependencies...
+:: 2. DEPENDENCY INSTALLATION
+echo 📦 Installing PHP dependencies...
+:: --no-scripts prevents Laravel from crashing before the environment is ready
 call composer install --ignore-platform-reqs --no-scripts
+
+echo 📦 Installing JavaScript dependencies...
 call npm install
 
-:: 3. THE SMART "DOUBLE ATTEMPT"
-:: We try once, and if it fails, we wait and try again automatically.
-echo 🔧 Configuring Laravel...
+:: 3. THE "FORCE DISCOVERY" PHASE
+:: This tells Laravel to manually register all packages and clear old states
+echo 🔧 Initializing Laravel Framework...
+call php artisan package:discover --ansi
+call php artisan config:clear >nul 2>&1
 
-:ATTEMPT1
-call php artisan key:generate --force >nul 2>&1
-call php artisan migrate:fresh --seed --force >nul 2>&1
+:: 4. AUTOMATED SETUP RETRY LOGIC
+:: First attempt to generate key and migrate
+echo 🗃️ Setting up Database...
+call php artisan key:generate --force
+call php artisan migrate:fresh --seed --force
 
-:: Check if migrations actually worked (looking for a table in sqlite)
+:: Verification: If the database is still locked/missing, we wait and retry
 php artisan db:show >nul 2>&1
 if %errorlevel% neq 0 (
-    echo ⏳ Finalizing system sync...
+    echo ⏳ System busy, retrying synchronization...
     timeout /t 3 >nul
-    call php artisan config:clear >nul
-    call php artisan key:generate --force
     call php artisan migrate:fresh --seed --force
 )
 
-:: 4. FINAL BUILD
-echo 🏗️  Building frontend...
+:: 5. VITE PRE-OPTIMIZATION & FINAL BUILD
+:: This is the "Secret Sauce": It forces Vite to stabilize hashes before the build
+echo ⚡ Stabilizing frontend assets...
+call npx vite optimize --force >nul 2>&1
+
+echo 🏗️  Building frontend (Production Mode)...
 call npm run build
+
+:: 6. CLEANUP
+call php artisan config:cache >nul 2>&1
 
 echo.
 echo ===========================================
-echo ✅ SETUP SUCCESSFUL!
+echo ✅ SETUP COMPLETED SUCCESSFULLY!
 echo ===========================================
+echo.
+echo 🚀 Next step: Run 'start-dev.bat' or 'php artisan serve'
+echo.
 pause
