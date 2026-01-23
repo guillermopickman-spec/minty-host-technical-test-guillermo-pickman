@@ -7,6 +7,10 @@ A modern web application for managing bookings and guest data for touristic apar
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-3.x-blue.svg)
 ![SQLite](https://img.shields.io/badge/SQLite-Database-lightgrey.svg)
 
+## 🎨 Screenshots
+
+![Application Screenshot](screenshots/image.PNG)
+
 ## ✨ Features
 
 - **Booking Management**: View and manage apartment bookings
@@ -214,10 +218,6 @@ npm run lint   # Linting
 - `POST /api/guests` - Create new guest
 - `PUT /api/guests/{id}` - Update guest
 - `DELETE /api/guests/{id}` - Delete guest
-
-## 🎨 Screenshots
-
-> *Add screenshots of your application here*
 
 ## 🤝 Contributing
 
