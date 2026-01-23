@@ -1,0 +1,52 @@
+version: '3.8'
+
+services:
+  # PHP Development Server
+  app:
+    image: php:8.3-apache
+    container_name: minty-host-app
+    ports:
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+    working_dir: /var/www/html
+    environment:
+      - APACHE_DOCUMENT_ROOT=/var/www/html/public
+    command: >
+      bash -c "a2enmod rewrite && 
+               apache2-foreground"
+    depends_on:
+      - db
+
+  # Database
+  db:
+    image: mysql:8.0
+    container_name: minty-host-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: minty_host
+      MYSQL_USER: minty
+      MYSQL_PASSWORD: minty
+    ports:
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+
+  # Node.js for frontend development
+  frontend:
+    image: node:18-alpine
+    container_name: minty-host-frontend
+    working_dir: /app
+    volumes:
+      - .:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: >
+      sh -c "npm install && npm run dev"
+    depends_on:
+      - app
+
+volumes:
+  db_data:
