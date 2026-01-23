@@ -1,70 +1,69 @@
-# 🚀 Quick Start Guide
+# 📦 Installation Guide
 
-## One-Click Setup (Windows)
+### Requirements
+- **PHP 8.2 or higher** with PDO SQLite extension enabled
+- **Composer** - PHP dependency manager
+- **Node.js 18+** - JavaScript runtime
+- **npm** - Node.js package manager (comes with Node.js)
+- **Windows 10 or higher** - Operating system
 
-If you're on Windows, you can get up and running in seconds with our automated setup scripts:
+# 🚀 Quick Start
 
-### 1. Initial Setup
-Double-click `setup.bat` to automatically:
-- ✅ Check if PHP, Composer, Node.js, and npm are installed
-- ✅ Install PHP dependencies with Composer
-- ✅ Create `.env` file and generate application key
-- ✅ Create SQLite database
-- ✅ Run database migrations
-- ✅ Install JavaScript dependencies with npm
-- ✅ Build frontend assets
+### Option 1: Full Automated Setup (Windows - Recommended)
+For the complete automated experience on Windows:
 
-### 2. Start Development
-Double-click `start-dev.bat` to automatically:
-- ✅ Check if required tools are installed
-- ✅ Start all development servers (Laravel, Vite, Queue, Logs)
-- ✅ Open the application in your browser
+1. Download or clone the repository
+2. Double-click `full-setup.bat`
+3. Wait for the setup to complete (it will open your browser automatically)
 
-## Manual Setup (All Platforms)
+This script handles everything: dependencies, database setup, server startup, and browser launch.
 
-If you prefer manual setup or are on macOS/Linux:
+### Option 2: Manual Windows Setup
+If you prefer step-by-step setup:
 
-### Prerequisites
-- **PHP 8.2+** - [Download PHP](https://windows.php.net/download/)
-- **Composer** - [Download Composer](https://getcomposer.org/download/)
-- **Node.js 18+** - [Download Node.js](https://nodejs.org/)
-- **npm** (comes with Node.js)
+1. Double-click `setup.bat` to install dependencies and set up the database
+2. Double-click `start-dev.bat` to start the development servers
 
-### Installation Steps
+### Option 3: Terminal Setup (All Platforms)
+For manual setup or other operating systems:
 
-```bash
-# 1. Clone or download the project
-git clone <repository-url>
-cd minty-host-guest-manager
+1. **Clone the repository**
+   ```bash
+   git clone <repository-url>
+   cd minty-host-guest-manager
+   ```
 
-# 2. Install PHP dependencies (ignore platform requirements)
-composer install --ignore-platform-reqs
+2. **Install PHP dependencies**
+   ```bash
+   composer install --ignore-platform-reqs
+   ```
 
-# 3. Create environment file
-cp .env.example .env
+3. **Install JavaScript dependencies**
+   ```bash
+   npm install
+   ```
 
-# 4. Generate application key
-php artisan key:generate
+4. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   ```
 
-# 5. Create SQLite database
-touch database/database.sqlite
+5. **Database setup**
+   ```bash
+   php artisan migrate:fresh --seed --force
+   npm run build
+   ```
 
-# 6. Run database migrations
-php artisan migrate --force
+6. **Start the application**
+   ```bash
+   composer run dev
+   ```
 
-# 7. Install JavaScript dependencies
-npm install
+7. **Access the application**
+   Open your browser and navigate to `http://localhost:8000`
 
-# 8. Build frontend assets
-npm run build
-```
-
-### Start Development Server
-
-```bash
-# Start all development servers
-composer run dev
-```
+**Note:** This project is tested and working on Windows. The automated scripts are optimized for Windows environments.
 
 ## What Gets Started
 
