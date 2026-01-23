@@ -9,7 +9,8 @@ A modern web application for managing bookings and guest data for touristic apar
 
 ## 🎨 Screenshots
 
-![Application Screenshot](screenshots/image.PNG)
+![Application Screenshot](screenshots/image1.PNG)
+![Application Screenshot](screenshots/image2.PNG)
 
 ## ✨ Features
 
