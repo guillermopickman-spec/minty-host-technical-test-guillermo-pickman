@@ -198,4 +198,17 @@ class GuestApiTest extends TestCase
         $booking2Data = collect($responseData)->firstWhere('id', $booking2->id);
         $this->assertCount(0, $booking2Data['guests']);
     }
+
+    /**
+     * Test getting bookings with no data.
+     *
+     * @return void
+     */
+    public function test_get_bookings_with_no_data()
+    {
+        $response = $this->getJson('/api/bookings');
+
+        $response->assertStatus(200)
+                 ->assertJsonCount(0); // Should return 0 bookings
+    }
 }
