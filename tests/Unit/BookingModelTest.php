@@ -5,7 +5,9 @@ namespace Tests\Unit;
 use Tests\TestCase;
 use App\Models\Booking;
 use App\Models\Guest;
+use App\Enums\BookingStatus;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use ValueError;
 
 class BookingModelTest extends TestCase
 {
@@ -25,7 +27,7 @@ class BookingModelTest extends TestCase
         ]);
 
         $this->assertInstanceOf(Booking::class, $booking);
-        $this->assertEquals('confirmed', $booking->status);
+        $this->assertEquals(BookingStatus::CONFIRMED, $booking->status);
         $this->assertNotNull($booking->checkin_at);
         $this->assertNotNull($booking->checkout_at);
     }
@@ -66,11 +68,11 @@ class BookingModelTest extends TestCase
             'status' => 'cancelled',
         ]);
 
-        $this->assertEquals('confirmed', $confirmedBooking->status);
-        $this->assertEquals('cancelled', $cancelledBooking->status);
+        $this->assertEquals(BookingStatus::CONFIRMED, $confirmedBooking->status);
+        $this->assertEquals(BookingStatus::CANCELLED, $cancelledBooking->status);
 
         // Test that only valid enum values are accepted
-        $this->expectException(\Exception::class);
+        $this->expectException(ValueError::class);
         Booking::create([
             'checkin_at' => now()->addDays(1),
             'checkout_at' => now()->addDays(3),
